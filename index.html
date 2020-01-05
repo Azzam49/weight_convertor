@@ -22,38 +22,62 @@
     </style>
 </head>
 <body>
+
+    <!--
         //TODO : make it possible to have multi option converting
         //and not just converting from Pounds(lbs).
-
+    -->
+      
     <div class="container">
         <div class="row">
             <div class="col-md-6 offset-md-3">
                 <h1 class="display-4 text-center mb-3">Weight Converter</h1>          
                 <form>
                     <div class="form-group">
-                        <input id="lbsInput" type="number" class="form-control form-control-lg" placeholder="Enter Pounds...">
+                        <label  class="mb-0" for="weights">Choose weight to convert:</label>
+                        <select class="custom-select mb-2" name="weights" id="weights">
+                            <option selected></option>
+                            <option value="Pounds">Pounds</option>
+                            <option value="Grams">Grams</option>
+                            <option value="Kilograms">Kilograms</option>
+                            <option value="Ounces">Ounces</option>
+                        </select>
+                    </div>                       
+                    <div class="form-group">
+                        <input id="weightInput" type="number" class="form-control form-control-lg">
                     </div>
                 </form>
 
                 <div id="output">
+
+                    <div class="card bg-warning mb-2 p-2">
+                        <div class="card-block">
+                            <h4>Pounds:</h4>
+                            <div id="lbsOutput">0</div>
+                        </div>
+                     </div>
+
                     <div class="card bg-primary mb-2 p-2">
                        <div class="card-block">
                            <h4>Grams:</h4>
-                           <div id="gramsOutput"></div>
+                           <div id="gramsOutput">0</div>
                        </div>
                     </div>
+
                     <div class="card bg-success mb-2 p-2">
                         <div class="card-block">
                             <h4>Kilograms:</h4>
-                            <div id="kgOutput"></div>
+                            <div id="kgOutput">0</div>
                         </div>
                      </div>
-                     <div class="card bg-danger mb-2 p-2">
+
+                    <div class="card bg-danger mb-2 p-2">
                         <div class="card-block">
                             <h4>Ounces:</h4>
-                            <div id="ozOutput"></div>
-                        </div>
-                     </div>
+                            <div id="ozOutput">0</div>
+                        <div>
+                    </div>
+
                 </div>
 
             </div>
@@ -63,23 +87,109 @@
 
 
     <script>
+
+        const weightInput = document.querySelector("#weightInput");
+        const outputCards = document.querySelector("#output");
+        const weightType = document.querySelector("#weights");
+
+        //output div's
+        const lbsOutPut = document.querySelector("#lbsOutput");
+        const gramsOutPut = document.querySelector("#gramsOutput");
+        const kgOutput = document.querySelector("#kgOutput");
+        const ozOutput = document.querySelector("#ozOutput");
+
+        //default input wieght is hidden
+        weightInput.style.visibility = "hidden";
         //default output cards is hidden
-        document.querySelector("#output").style.visibility = "hidden";
+        outputCards.style.visibility = "hidden";
 
-        document.querySelector("#lbsInput").addEventListener("input",function(e){
-            let lbs = e.target.value;
-            document.querySelector("#output").style.visibility = "visible";
+        function controlCards(setToZero,hide){
 
-            //convert to Grams and display
-            document.querySelector("#gramsOutput").innerHTML = lbs/0.0022046;
+            if(setToZero === true){
+                lbsOutPut.innerHTML = 0;
+                gramsOutPut.innerHTML = 0;
+                kgOutput.innerHTML = 0;
+                ozOutput.innerHTML = 0;
+            }
 
-            //convert to Kilograms and display
-            document.querySelector("#kgOutput").innerHTML = lbs/2.2046;
+            if(hide === true){
+                outputCards.style.visibility = "hidden";
+            }
+        }
 
-            //convert to Ounces and display
-            document.querySelector("#ozOutput").innerHTML = lbs*16;
+        weightType.addEventListener('change',function(e){
+            
+            weightInput.value = "";
+
+            if(e.target.value != "")
+            { 
+                weightInput.style.visibility = "visible";              
+                weightInput.setAttribute("placeholder",`Enter ${e.target.value}...`);
+                controlCards(setToZero=true);
+            }
+           
+            if(e.target.value === "")
+            { 
+                weightInput.style.visibility = "hidden";
+                controlCards(setToZero=true,hide=true);
+            }
 
         });
+
+
+
+        weightInput.addEventListener("input",function(e){
+            let type = weightType.value;
+            let weightValue = e.target.value;
+            outputCards.style.visibility = "visible";
+
+
+            if(type === "Pounds"){
+                //convert Pounds to Grams 
+                gramsOutPut.innerHTML = weightValue/0.0022046;
+
+                //convert Pounds to Kilograms 
+                kgOutput.innerHTML = weightValue/2.2046;
+
+                //convert Pounds to Ounces 
+                ozOutput.innerHTML = weightValue*16;
+            }
+            else if(type === "Grams"){
+                //convert Grams to Pounds 
+                lbsOutPut.innerHTML = weightValue/454;
+
+                //convert Grams to Kilograms 
+                kgOutput.innerHTML = weightValue/1000;
+
+                //convert Grams to Ounces 
+                ozOutput.innerHTML = weightValue*28.35;
+            }
+            else if(type === "Kilograms"){
+                //convert Kilograms to Pounds 
+                lbsOutPut.innerHTML = weightValue*2.205;
+
+                //convert Kilograms to Grams 
+                gramsOutPut.innerHTML = weightValue*1000;
+
+                //convert Kilograms to Ounces 
+                ozOutput.innerHTML = weightValue*35.274;
+            }
+            else if(type === "Ounces"){
+                //convert Ounces to Pounds 
+                lbsOutPut.innerHTML = weightValue/16;
+
+                //convert Ounces to Grams 
+                gramsOutPut.innerHTML = weightValue*28.35;
+
+                //convert Ounces to Kilograms 
+                kgOutput.innerHTML = weightValue/35.274;
+            }
+
+        });
+
+
+
+
     </script>
 </body>
 </html>
